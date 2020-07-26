@@ -1,0 +1,205 @@
+<%- include("partials/header") -%>
+
+<body>
+  <h1>Online Sudoku Agent</h1>
+  <% if(flag) { %>
+  <% var p=P_val, q=Q_val, N=p*q; %>
+  <div class="wrapper">
+    <h3>Initialized Sudoku Board</h3>
+    <div class="block">
+      <table>
+        <% for(var i=0; i<N; i++) { %>
+        <tr>
+          <% for(var j=0; j<N; j++) { %>
+          <% if(i !== 0 && i%p !== 0) { %>
+          <% if(j === 0) { %>
+          <td class="hori"><%= initBoard[i][j] %></td>
+          <% } else if (j%q === 0){ %>
+          <td class="vert-bolder hori"><%= initBoard[i][j] %></td>
+          <% } else { %>
+          <td class="vert hori"><%= initBoard[i][j] %></td>
+          <% } %>
+          <% } else if(i !==0 && i%p === 0){ %>
+          <% if(j === 0) { %>
+          <td class="hori-bolder"><%= initBoard[i][j] %></td>
+          <% } else if (j%q === 0){ %>
+          <td class="vert-bolder hori-bolder"><%= initBoard[i][j] %></td>
+          <% } else { %>
+          <td class="vert hori-bolder"><%= initBoard[i][j] %></td>
+          <% } %>
+          <% } else { %>
+          <% if(j === 0) { %>
+          <td><%= initBoard[i][j] %></td>
+          <% } else if(j%q === 0){ %>
+          <td class="vert-bolder"><%= initBoard[i][j] %></td>
+          <% } else { %>
+          <td class="vert"><%= initBoard[i][j] %></td>
+          <% } %>
+          <% } %>
+          <% } %>
+        </tr>
+        <% } %>
+      </table>
+    </div>
+  </div>
+  <% if(!failed) { %>
+  <div class="wrapper">
+    <h3>Computed Sudoku Board</h3>
+    <div class="block">
+      <table>
+        <% for(var i=0; i<N; i++) { %>
+        <tr>
+          <% for(var j=0; j<N; j++) { %>
+          <% if(i !== 0 && i%p !== 0) { %>
+          <% if(j === 0) { %>
+          <td class="hori"><%= resBoard[i][j] %></td>
+          <% } else if (j%q === 0){ %>
+          <td class="vert-bolder hori"><%= resBoard[i][j] %></td>
+          <% } else { %>
+          <td class="vert hori"><%= resBoard[i][j] %></td>
+          <% } %>
+          <% } else if(i !==0 && i%p === 0){ %>
+          <% if(j === 0) { %>
+          <td class="hori-bolder"><%= resBoard[i][j] %></td>
+          <% } else if (j%q === 0){ %>
+          <td class="vert-bolder hori-bolder"><%= resBoard[i][j] %></td>
+          <% } else { %>
+          <td class="vert hori-bolder"><%= resBoard[i][j] %></td>
+          <% } %>
+          <% } else { %>
+          <% if(j === 0) { %>
+          <td><%= resBoard[i][j] %></td>
+          <% } else if(j%q === 0){ %>
+          <td class="vert-bolder"><%= resBoard[i][j] %></td>
+          <% } else { %>
+          <td class="vert"><%= resBoard[i][j] %></td>
+          <% } %>
+          <% } %>
+          <% } %>
+        </tr>
+        <% } %>
+      </table>
+    </div>
+  </div>
+
+  <br>
+  <br>
+  <div class="wrapper">
+    <h3>Computational Costs</h3>
+    <div class="info2">
+      <ul>
+        <li>Number of pushes into stack: <%= pushes %></li>
+        <li>Number of backtrackings: <%= backtracks %></li>
+        <li>Time elapsed: <%= time %> ms</li>
+      </ul>
+    </div>
+  </div>
+  <br>
+  <br>
+  <% } else { %>
+  <h4>Failed to find a solution!</h4>
+  <% } %>
+
+  <form action="/" method="get">
+    <button type="submit" name="button">Run Again</button>
+  </form>
+  <% } else { %>
+  <div class="des">
+    <h3>
+      This application randomly generates a Sudoku board with specified parameters using python-shell Node modules,
+      and then runs pre-compiled C++ program as a standalone app in a child process to try to solve Sudoku as a Constraint Satisfaction Problem with given AI approaches.
+    </h3>
+  </div>
+  <form action="/" method="post">
+    <div class="wrapper">
+      <h3>Monster Sudoku puzzles are described by four parameters:</h3>
+      <div class="info">
+        <ul>
+          <li>N = the length of one side of the NxN grid, also the number of distinct tokens</li>
+          <li>P = the number of rows in each block, also the number of block columns</li>
+          <li>Q = the number of columns in each block, also the number of block rows</li>
+          <li>M = the number of values filled in from the start</li>
+        </ul>
+      </div>
+      <div class="warn">
+        <p class="warning">Note: The value of M being too large or too small may fail to find a solution. The value of M should be [0, PxQxPxQ].
+        </p>
+      </div>
+    </div>
+    <br>
+    <div class="form">
+      <label for="P">Choose P: </label>
+      <select id="P" name="P" required>
+        <option value="3" <%= (P_val == 3)?"selected":"" %>>3</option>
+        <option value="4" <%= (P_val == 4)?"selected":"" %>>4</option>
+        <option value="5" <%= (P_val == 5)?"selected":"" %>>5</option>
+      </select>
+      &nbsp&nbsp
+      <label for="Q">Choose Q: </label>
+      <select id="Q" name="Q" required>
+        <option value="3" <%= (Q_val == 3)?"selected":"" %>>3</option>
+        <option value="4" <%= (Q_val == 4)?"selected":"" %>>4</option>
+        <option value="5" <%= (Q_val == 5)?"selected":"" %>>5</option>
+      </select>
+      &nbsp&nbsp
+      <label for="M">Input M: </label>
+      <input type="text" id="M" name="M" value=<%= M_val %> required autocomplete="off">
+      <% if(err) { %>
+        <h3 class="warning"><%= message %></h3>
+      <% } %>
+    </div>
+    <div class="wrapper">
+      <h3>Heuristic-based approaches that solve Sudoku:</h3>
+      <div class="info">
+        <ul>
+          <li>Minimum Remaining Value (MRV)</li>
+          <li>MRV with Degree Heuristic (MAD)</li>
+          <li>Least Constraining Value (LCV)</li>
+          <li>Forward Checking (FC)</li>
+          <li>Norvig's Check Heuristic for Sudoku (NOR)</li>
+        </ul>
+      </div>
+      <p class="warning">Please choose whether to use the following approaches to solve Sudoku.</p>
+    </div>
+    <div class="form">
+      <label for="MRV">MRV: </label>
+      <select id="MRV" name="MRV" required>
+        <option value="true">Yes</option>
+        <option value="false">No</option>
+      </select>
+      &nbsp&nbsp
+      <label for="MAD">MAD: </label>
+      <select id="MAD" name="MAD" required>
+        <option value="true">Yes</option>
+        <option value="false">No</option>
+      </select>
+      &nbsp&nbsp
+      <label for="LCV">LCV: </label>
+      <select id="LCV" name="LCV" required>
+        <option value="true">Yes</option>
+        <option value="false">No</option>
+      </select>
+      &nbsp&nbsp
+      <label for="FC">FC: </label>
+      <select id="FC" name="FC" required>
+        <option value="true">Yes</option>
+        <option value="false">No</option>
+      </select>
+      &nbsp&nbsp
+      <label for="NOR">NOR: </label>
+      <select id="NOR" name="NOR" required>
+        <option value="true">Yes</option>
+        <option value="false">No</option>
+      </select>
+    </div>
+    <p class="warning">Please note that larger board may take longer time to compute. You may wait for a while.</p>
+    <button id="btn" type="submit" name="button">Run</button>
+  </form>
+  <% } %>
+  <%- include("partials/footer") -%>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script type="text/javascript">
+    $("#M").keyup(function () { 
+      this.value = this.value.replace(/[^0-9\.]/g,'');
+    });
+  </script>
