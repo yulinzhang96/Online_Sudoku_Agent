@@ -1,0 +1,18 @@
+{
+  "name": "online_sudoku_intelligent_agent",
+  "version": "1.0.0",
+  "description": "Extended project for course CS271P Intro to Artifical Intelligence",
+  "main": "app.js",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "ejs": "^3.0.2",
+    "express": "^4.17.1",
+    "python-shell": "^1.0.8"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Yulin Zhang",
+  "license": "ISC"
+}
